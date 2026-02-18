@@ -279,4 +279,112 @@ En este proyecto se aplican los siguientes fundamentos de programación en Bash:
 * **`gzip`**: Comprime archivos para reducir su tamaño (usado junto a `tar` con la opción `-z`).
 
 ---
-*Documentación creada como portafolio y apuntes de estudio para el temario de Scripting en Bash.*
+## 🔄 Estructuras de Repetición (Bucles) en Bash
+
+Los bucles (o ciclos) son estructuras fundamentales en la programación de scripts. Nos permiten ejecutar un bloque de comandos múltiples veces de forma automática, ahorrando tiempo y líneas de código. 
+
+Según el temario, en Bash destacamos dos tipos principales: el bucle `for` y el bucle `while`.
+
+
+
+[Image of flowchart of a loop in programming]
+
+
+---
+
+### 1. El Bucle `for`
+
+El bucle `for` se utiliza principalmente cuando queremos **recorrer una lista de elementos** (como un grupo de archivos, una serie de palabras, o los parámetros pasados a un script) y ejecutar una acción por cada uno de ellos.
+
+**Sintaxis básica:**
+```bash
+for variable in [ lista de elementos ]
+do
+    comandos
+done
+```
+
+**Ejemplo práctico: Recorrer una lista de palabras**
+En este ejemplo, el bucle toma cada nombre de la lista, lo guarda temporalmente en la variable `$nombre` y ejecuta el comando `echo`.
+
+```bash
+#!/bin/bash
+
+echo "Iniciando el saludo:"
+
+for nombre in Ana Carlos Elena Roberto
+do
+    echo "¡Hola, $nombre! Bienvenido al sistema."
+done
+
+echo "Saludos finalizados."
+```
+
+**Ejemplo práctico: Recorrer los parámetros pasados al script (`$@`)**
+```bash
+#!/bin/bash
+
+# $@ representa todos los argumentos pasados al ejecutar el script
+for archivo in $@
+do
+    echo "Procesando el archivo: $archivo"
+    # Aquí podríamos poner comandos como cp, rm, cat, etc.
+done
+```
+
+---
+
+### 2. El Bucle `while`
+
+El bucle `while` (que significa "mientras") repite un bloque de comandos continuamente **mientras una condición específica se cumpla** (es decir, sea verdadera). En el momento en que la condición deja de cumplirse, el bucle se detiene. Es ideal para crear menús interactivos o procesos que dependen de un estado variable.
+
+**Sintaxis básica:**
+```bash
+while [ condición ]
+do
+    comandos
+done
+```
+
+**Ejemplo práctico: Un contador simple**
+En este ejemplo usamos la condición `-le` (menor o igual) y el comando `let` para realizar la operación aritmética y evitar que el bucle sea infinito.
+
+```bash
+#!/bin/bash
+
+contador=1
+
+# Mientras el contador sea menor o igual a 3...
+while [ $contador -le 3 ]
+do
+    echo "El contador va por el número: $contador"
+    
+    # Incrementamos el valor en 1 en cada vuelta
+    let contador=$contador+1
+done
+
+echo "¡Bucle terminado!"
+```
+
+**Ejemplo práctico: Menú interactivo básico**
+El bucle se repetirá hasta que el usuario introduzca el número que cambia la condición.
+
+```bash
+#!/bin/bash
+
+opcion=0
+
+# Mientras la opción NO sea igual (-ne) a 2...
+while [ $opcion -ne 2 ]
+do
+    echo "1. Saludar"
+    echo "2. Salir"
+    read -p "Elige una opción: " opcion
+    
+    if [ $opcion -eq 1 ]; then
+        echo "¡Hola! ¿Qué tal?"
+    fi
+done
+
+echo "Has salido del programa."
+```
