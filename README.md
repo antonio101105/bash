@@ -388,3 +388,136 @@ done
 
 echo "Has salido del programa."
 ```
+## 🚦 Estructuras de Control Condicionales en Bash
+
+Las estructuras condicionales permiten que un script tome decisiones. En lugar de ejecutar todas las líneas de código de arriba a abajo, el script evalúa una condición (por ejemplo, el valor de una variable o la existencia de un archivo) y decide qué camino tomar.
+
+En Bash, las dos estructuras condicionales principales son `if` y `case`.
+
+---
+
+### 1. La Estructura `if` / `then` / `elif` / `else` / `fi`
+
+La estructura `if` (que significa "si" condicional) es la forma más directa de evaluar una condición lógica. Se puede usar en su forma más simple (solo `if/then`) o añadirle alternativas (`elif` para otra condición, `else` como acción por defecto si ninguna se cumple).
+
+
+
+[Image of if else statement flowchart]
+
+
+**Sintaxis básica (múltiples condiciones):**
+```bash
+if [ condición1 ]
+then
+    # comandos si la condición1 se cumple
+elif [ condición2 ]
+then
+    # comandos si la condición2 se cumple
+else
+    # comandos si NO se cumple ni la condición1 ni la condición2
+fi
+```
+*Nota: Es imprescindible cerrar la estructura con `fi` (if al revés).*
+
+**Ejemplo práctico: Evaluación de números**
+En este ejemplo utilizamos los operadores lógicos para enteros (`-gt` para mayor que, `-lt` para menor que, `-eq` para igual).
+
+```bash
+#!/bin/bash
+
+echo "Introduce un número:"
+read numero
+
+if [ "$numero" -gt 10 ]
+then
+    echo "El número introducido es MAYOR que 10."
+elif [ "$numero" -eq 10 ]
+then
+    echo "El número introducido es EXACTAMENTE 10."
+else
+    echo "El número introducido es MENOR que 10."
+fi
+
+echo "Evaluación finalizada."
+```
+
+**Ejemplo práctico: Comprobación de archivos**
+Muy útil en administración de sistemas para verificar estados antes de actuar, usando los operadores de archivos (`-f` para archivo ordinario, `-d` para directorio).
+
+```bash
+#!/bin/bash
+
+archivo="/etc/passwd"
+
+# Si el archivo existe y es un fichero ordinario (-f)
+if [ -f "$archivo" ]
+then
+    echo "El archivo $archivo existe."
+    
+    # Podemos anidar ifs. Si existe, comprobamos si tenemos permiso de lectura (-r)
+    if [ -r "$archivo" ]
+    then
+        echo "Y tienes permisos para leerlo."
+    else
+        echo "Pero NO tienes permisos para leerlo."
+    fi
+else
+    echo "El archivo $archivo no se encuentra."
+fi
+```
+
+---
+
+### 2. La Estructura `case`
+
+La estructura `case` (que significa "en caso de") es una alternativa mucho más limpia y legible que anidar múltiples `elif` cuando queremos evaluar **el valor de una única variable frente a múltiples opciones específicas**. Es la estructura ideal para construir menús interactivos.
+
+
+
+**Sintaxis básica:**
+```bash
+case $variable in
+    patrón1)
+        comandos ;;
+    patrón2)
+        comandos ;;
+    *)
+        comandos por defecto ;;
+esac
+```
+*Notas importantes:*
+* Cada bloque de opciones se cierra con doble punto y coma `;;`.
+* El asterisco `*)` actúa como un "comodín" que atrapa cualquier valor que no coincida con los patrones anteriores (similar al `else`).
+* La estructura se cierra con `esac` (case al revés).
+
+**Ejemplo práctico: Un menú de opciones**
+El usuario introduce un valor, y el `case` decide qué comando ejecutar en función de esa entrada.
+
+```bash
+#!/bin/bash
+
+echo "=== MENÚ PRINCIPAL ==="
+echo "A) Ver la fecha y hora"
+echo "B) Ver el directorio actual"
+echo "C) Salir"
+echo "======================"
+read -p "Elige una opción (A/B/C): " opcion
+
+case $opcion in
+    "A" | "a") # Podemos usar el pipe (|) para evaluar múltiples patrones (mayúsculas o minúsculas)
+        echo "La fecha es:"
+        date
+        ;;
+    "B" | "b")
+        echo "Estás en el directorio:"
+        pwd
+        ;;
+    "C" | "c")
+        echo "Saliendo del programa..."
+        exit 0
+        ;;
+    *)
+        echo "Error: Opción incorrecta. Debes elegir A, B o C."
+        ;;
+esac
+```
