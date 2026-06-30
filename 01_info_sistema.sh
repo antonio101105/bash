@@ -1,6 +1,7 @@
 #!/bin/bash
 # Descripción: Muestra un reporte básico del estado del sistema y del usuario.
 # Autor: Antonio Manuel Núñez Campallo
+
 clear
 echo "=================================================="
 echo "         REPORTE DE ESTADO DEL SISTEMA            "
